@@ -1,35 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route, Routes } from "react-router-dom";
+import Dashboard from "./workspace/Dashboard";
+import Test from "./charts/test";
+import BubblePlot from "./charts/bubblePlot/BubblePlot";
+
+/**
+ * routes 배열에 [화면 좌측 서랍에 표시될 이름, route url path, 차트 컴포넌트]를 넣으면 됨
+ */
+// eslint-disable-next-line react-refresh/only-export-components
+export const routes: [string, string, JSX.Element][] = [
+  ['home', '', <>좌측 메뉴에서 표시할 차트 클릭</>],
+  ['test페이지', 'test1', <Test />],
+  ['bubblePlot', 'bubbleplot', <BubblePlot />]
+]
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Routes>
+        <Route path="/" element={<Dashboard></Dashboard>}> {/* 기본 레이아웃 */}
+          {routes.map(([, path, element]) => <Route path={path} element={element} key={path}/>)}
+        </Route>
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
