@@ -44,7 +44,7 @@ export const routes: [string, string, JSX.Element][] = [
 ```
 
 2. charts 폴더에 생성할 차트의 폴더와 tsx파일 생성
-3. 1번의 routes 폴더에 추가한 요소의 3번째 index에 컴포넌트 삽입
+3. 1번의 routes배열의 3번째 index에 작성한 컴포넌트 삽입
 
 ```typescript
   ['막대그래프', 'bar', <BarPlot />]
