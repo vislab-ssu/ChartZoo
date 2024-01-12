@@ -1,6 +1,6 @@
-import { Box, Toolbar, Container, Grid, Paper } from "@mui/material";
+import { Box, Container, Grid, Paper, Toolbar } from "@mui/material";
 
-export default function MainView({children}) {
+export default function MainView({ children }) {
   return (
     <Box
       component="main"
@@ -15,7 +15,7 @@ export default function MainView({children}) {
       }}
     >
       <Toolbar />
-      <Container maxWidth={false} sx={{ mt: 4, mb: 4 }}>
+      <Container maxWidth={false} sx={{ mt: 4, mb: 4, minWidth: 'fit-content' }}>
         <Grid container spacing={3} sx={{ height: "90vh" }}>
           {/* Chart */}
           <Grid item xs={10} md={12} lg={12}>
