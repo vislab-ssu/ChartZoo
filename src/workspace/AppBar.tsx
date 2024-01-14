@@ -1,15 +1,14 @@
 import styled from "@emotion/styled";
 import { Toolbar, IconButton, Typography, Theme } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
-import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
-
 
 const drawerWidth: number = 240;
 
 const Bar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }: {theme?: Theme, open: boolean}) => ({
+})(({ theme, open }: { theme?: Theme; open: boolean }) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
@@ -25,11 +24,11 @@ const Bar = styled(MuiAppBar, {
   }),
 }));
 
-export default function AppBar({open, toggleDrawer}) {
+export default function AppBar({ open, toggleDrawer }) {
   const navigate = useNavigate();
   const onClick = () => {
-    navigate('/')
-  }
+    navigate("/");
+  };
   return (
     <>
       <Bar position="absolute" open={open}>
@@ -55,7 +54,7 @@ export default function AppBar({open, toggleDrawer}) {
             variant="h6"
             color="inherit"
             noWrap
-            sx={{ flexGrow: 1, cursor: 'pointer' }}
+            sx={{ flexGrow: 1, cursor: "pointer" }}
             onClick={onClick}
           >
             ChartZoo
