@@ -37,7 +37,7 @@ export const ScatterPlot = () => {
 
       // Color scale: give me a specie name, I return a color
       const color = d3
-        .scaleOrdinal()
+        .scaleOrdinal<string>()
         .domain(["setosa", "versicolor", "virginica"])
         .range(["#440154ff", "#21908dff", "#fde725ff"]);
 
