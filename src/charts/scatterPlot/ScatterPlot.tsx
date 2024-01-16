@@ -11,7 +11,7 @@ export const ScatterPlot = () => {
     const margin = { top: 10, right: 30, bottom: 30, left: 60 },
       width = 460 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
-
+    console.log(width);
     // append the svg object to the body of the pages
     const svg = d3
       .select(svgRef.current)
