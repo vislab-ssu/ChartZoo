@@ -2,6 +2,10 @@ import * as d3 from "d3";
 import { useEffect, useRef } from "react";
 
 export const ScatterPlot = () => {
+  /* 
+  let svgRef라고 할 경우 return을
+  <svg ref={(ref) => {svgRef = ref}}></svg> 로 하면 useRef 사용과 같은 효과 
+  */
   const svgRef = useRef();
 
   useEffect(() => {
@@ -14,7 +18,17 @@ export const ScatterPlot = () => {
       width = 460 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
 
-    // d3.select(svgRef.current).select('g').remove();
+    /*
+    d3.select 함수의 인자
+    -> object 타입의 경우 DOM 객체
+      - document.querySelector로 검색한 DOM
+      - useRef로 뽑아낸 DOM
+    -> string 타입의 경우 selector 형식
+      - #my_dataviz
+      - .container
+      - div
+    */
+    d3.select(svgRef.current).select('g').remove(); // react에 의해 중복 생성된 내부 element 제거
     // append the svg object to the body of the page
     const svg = d3
       .select(svgRef.current)
@@ -63,5 +77,7 @@ export const ScatterPlot = () => {
     });
   };
 
-  return <svg ref={svgRef}></svg>;
+  // jsx에 만든 svg를 useRef를 통해 그 svg DOM 객체를 svgRef에 할당
+  return <svg ref={svgRef}></svg>
+  ;
 };
