@@ -15,8 +15,10 @@ export const ScatterPlot = () => {
   const render = () => {
     // set the dimensions and margins of the graph
     const margin = { top: 10, right: 30, bottom: 30, left: 60 },
-      width = 460 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+      svgWidth = 460,
+      svgHeight = 400,
+      width = svgWidth - margin.left - margin.right,
+      height = svgHeight - margin.top - margin.bottom;
 
     /*
     d3.select 함수의 인자
@@ -32,8 +34,8 @@ export const ScatterPlot = () => {
     // append the svg object to the body of the page
     const svg = d3
       .select(svgRef.current)
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("width", svgWidth)
+      .attr("height", svgHeight)
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
@@ -79,5 +81,5 @@ export const ScatterPlot = () => {
 
   // jsx에 만든 svg를 useRef를 통해 그 svg DOM 객체를 svgRef에 할당
   return <svg ref={svgRef}></svg>
-  ;
+    ;
 };
