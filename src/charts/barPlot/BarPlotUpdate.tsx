@@ -60,10 +60,11 @@ export const BarPlotUpdate = () => {
 
     updateRef.current = function (data) {
       const keys = Object.keys(data[0]);
-      console.log({ keys })
+      console.log({ keys });
+      const [xKey, yKey] = keys;
       // X axis
-      x.domain(data.map(d => d[keys[0]]));
-      y.domain([0, Math.max(...data.map(v => +v[keys[1]]))]);
+      x.domain(data.map(d => d[xKey]));
+      y.domain([0, Math.max(...data.map(v => +v[yKey]))]);
 
       xAxis.call(d3.axisBottom(x))
         .selectAll("text")
@@ -76,16 +77,18 @@ export const BarPlotUpdate = () => {
         .join("rect")
         .transition()
         .duration(500)
-        .attr("x", d => x(d[keys[0]]))
-        .attr("y", d => y(+d[keys[1]]))
+        .attr("x", d => x(d[xKey]))
+        .attr("y", d => y(+d[yKey]))
         .attr("width", x.bandwidth())
-        .attr("height", d => height - y(+d[keys[1]]))
+        .attr("height", d => height - y(+d[yKey]))
         .attr("fill", "#69b3a2")
     }
   }
   return (
     <>
-      <button onClick={() => setDataUrl(urlList[+(index = !index)])}>change</button>
+      <div>
+        <button onClick={() => setDataUrl(urlList[+(index = !index)])}>change</button>
+      </div>
       <svg ref={svgRef}></svg>
     </>
   )
