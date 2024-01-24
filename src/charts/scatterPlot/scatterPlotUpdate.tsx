@@ -10,7 +10,6 @@ let index = false;
 export const ScatterPlotUpdate = () => {
   const [dataUrl, setDataUrl] = useState(urlList[+index]);
   const svgRef = useRef();
-  const containerRef = useRef<d3.Selection<SVGGElement, unknown, HTMLElement, any>>();
   const updateRef = useRef<(data: any[]) => void>();
 
   useEffect(() => {
@@ -29,13 +28,12 @@ export const ScatterPlotUpdate = () => {
       height = svgHeight - margin.top - margin.bottom;
 
     // d3.select(svgRef.current).select('g').remove(); // react에 의해 중복 생성된 내부 element 제거
-    containerRef.current = d3.select(svgRef.current)
+    const container = d3.select(svgRef.current)
       .attr("width", svgWidth)
       .attr("height", svgHeight)
       .append("g")
       .attr("class", 'container')
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
-    const container = containerRef.current;
     d3.csv(
       "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/iris.csv"
     ).then(function (data) {

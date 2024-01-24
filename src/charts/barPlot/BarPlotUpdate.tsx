@@ -1,4 +1,4 @@
-import * as d3 from "d3"; // 자동완성으로 추가하면 import d3 from "d3"; 가 추가되는데, 항상 * as 를 붙여야 함
+import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
 
 const urlList = [
@@ -10,7 +10,6 @@ let index = false;
 export const BarPlotUpdate = () => {
   const [dataUrl, setDataUrl] = useState(urlList[+index]);
   const svgRef = useRef();
-  const containerRef = useRef<d3.Selection<SVGGElement, unknown, HTMLElement, any>>();
   const updateRef = useRef<(data: any[]) => void>();
 
   useEffect(() => {
@@ -30,13 +29,12 @@ export const BarPlotUpdate = () => {
       height = svgHeight - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
-    containerRef.current = d3.select(svgRef.current)
+    const container = d3.select(svgRef.current)
       .attr("width", svgWidth)
       .attr("height", svgHeight)
       .append("g")
       .attr('class', 'container')
       .attr("transform", `translate(${margin.left},${margin.top})`);
-    const container = containerRef.current;
 
     const x = d3.scaleBand()
       .range([0, width])
@@ -93,3 +91,5 @@ export const BarPlotUpdate = () => {
     </>
   )
 }
+
+
