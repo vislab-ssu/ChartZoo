@@ -105,9 +105,9 @@ export const BarPlot = () => {
         .data(data)
         .join("rect")
         .attr("x", d => x(d.Country))
-        .attr("y", d => y(d.Value))
+        .attr("y", d => y(+d.Value))
         .attr("width", x.bandwidth())
-        .attr("height", d => height - y(d.Value))
+        .attr("height", d => height - y(+d.Value))
         .attr("fill", "#69b3a2")
 
     })

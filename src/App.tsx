@@ -7,6 +7,7 @@ import { ScatterPlotUpdate } from "./charts/scatterPlot/scatterPlotUpdate";
 import Test from "./charts/test";
 import Dashboard from "./workspace/Dashboard";
 import { BarPlot } from "./charts/barPlot/BarPlot";
+import { ScatterPlot } from "./charts/scatterPlot/scatterPlot";
 
 /**
  * routes 배열에 [화면 좌측 서랍에 표시될 이름, route url path, 차트 컴포넌트]를 넣으면 됨
@@ -18,7 +19,7 @@ export const routes: [string, string, JSX.Element][] = [
   ['bubblePlot', 'bubbleplot', <BubblePlot />],
   ['brush 테스트', 'brush', <BrushTest></BrushTest>],
   ['barPlot', 'bar', <BarPlot></BarPlot>],
-  ['scatterPlot', 'scatter', <ScatterPlotUpdate></ScatterPlotUpdate>],
+  ['scatterPlot', 'scatter', <ScatterPlot></ScatterPlot>],
   ['selectableBarPlot', 'selectableBar', <Workspace></Workspace>]
 ]
 
