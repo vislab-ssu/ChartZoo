@@ -95,7 +95,7 @@ export const ScatterPlot = () => {
       //////////////
       // Add dots //
       //////////////
-      // [ selectAll - data - json ]
+      // [ selectAll - data - join ]
       // 데이터 등록(첫 호출)을 통한 요소들의 삽입과 데이터 업데이트(두번째 호출부터)를 통한 요소들의 수정을 겸함
       // selectAll : 업데이트 대상 식별
       // data - json : data에 등록된 배열요소를 전부 circle로 만들기
