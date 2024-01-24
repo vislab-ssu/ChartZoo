@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 const urlList = [
   "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/iris.csv",
-  "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/2_TwoNum.csv"
+  "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/4_ThreeNum.csv"
 ];
 let index = false;
 
