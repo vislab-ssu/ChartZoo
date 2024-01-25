@@ -18,8 +18,8 @@ export const routes: [string, string, JSX.Element][] = [
   ['test페이지', 'test1', <Test />],
   ['bubblePlot', 'bubbleplot', <BubblePlot />],
   ['brush 테스트', 'brush', <BrushTest></BrushTest>],
-  ['barPlot', 'bar', <BarPlot></BarPlot>],
-  ['scatterPlot', 'scatter', <ScatterPlot></ScatterPlot>],
+  ['barPlot', 'bar', <BarPlotUpdate></BarPlotUpdate>],
+  ['scatterPlot', 'scatter', <ScatterPlotUpdate></ScatterPlotUpdate>],
   ['selectableBarPlot', 'selectableBar', <Workspace></Workspace>]
 ]
 

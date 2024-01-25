@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
 
+// 사용할 데이터셋 URL 목록
 const urlList = [
   "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv",
   "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/barplot_change_data.csv"
@@ -8,9 +9,9 @@ const urlList = [
 let index = false;
 
 export const BarPlotUpdate = () => {
-  const [dataUrl, setDataUrl] = useState(urlList[+index]);
+  const [dataUrl, setDataUrl] = useState(urlList[+index]);  // 현재 사용중인 데이터셋
   const svgRef = useRef();
-  const updateRef = useRef<(data: any[]) => void>();
+  const updateRef = useRef<(data: any[]) => void>();  // 데이터셋 변경 시 호출 예정
 
   useEffect(() => {
     renderLayout();
@@ -18,6 +19,7 @@ export const BarPlotUpdate = () => {
 
   useEffect(() => {
     d3.csv(dataUrl).then(updateRef.current)
+    // d3.csv로 parsing한 것을 가지고 updateRef 함수 호출
   }, [dataUrl])
 
   const renderLayout = () => {
