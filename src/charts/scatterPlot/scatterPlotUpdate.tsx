@@ -54,7 +54,7 @@ export const ScatterPlotUpdate = () => {
       1: {
         xKey: 'gdpPercap',
         yKey: 'lifeExp',
-        colorKey: 'country'
+        colorKey: 'continent'
       }
     }
     updateRef.current = function (data) {
@@ -68,12 +68,12 @@ export const ScatterPlotUpdate = () => {
       const yMin = Math.min(...yMap);
       const yMax = Math.max(...yMap);
 
-      const colorMap = data.map(v => v[colorKey]);
+      const colorMap = new Set(data.map(v => v[colorKey]));
+      console.log({ colorMap })
 
       x.domain([0, xMax]);
       y.domain([0, yMax]);
       color.domain(colorMap)
-
       xAxis.call(d3.axisBottom(x));
       yAxis.call(d3.axisLeft(y));
 
