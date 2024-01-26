@@ -1,6 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import { BarPlot } from "./charts/barPlot/BarPlot";
+import { BarPlotUpdate } from "./charts/barPlot/BarPlotUpdate";
 import { ScatterPlot } from "./charts/scatterPlot/ScatterPlot";
+import { ScatterPlotUpdate } from "./charts/scatterPlot/ScatterPlotUpdate";
 import BrushTest from "./charts/brushTest/BrushTest";
 import BubblePlot from "./charts/bubblePlot/BubblePlot";
 import Test from "./charts/test";
@@ -16,7 +18,13 @@ export const routes: [string, string, JSX.Element][] = [
   ["bubblePlot", "bubbleplot", <BubblePlot />],
   ["brush 테스트", "brush", <BrushTest></BrushTest>],
   ["barPlot", "bar", <BarPlot></BarPlot>],
+  ["barPlotUpdate", "barupdate", <BarPlotUpdate></BarPlotUpdate>],
   ["scatterPLot", "scatter", <ScatterPlot></ScatterPlot>],
+  [
+    "scatterPlotUpdate",
+    "scatterupdate",
+    <ScatterPlotUpdate></ScatterPlotUpdate>,
+  ],
 ];
 
 function App() {
