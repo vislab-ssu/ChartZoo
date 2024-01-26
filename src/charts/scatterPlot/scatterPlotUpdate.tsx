@@ -17,7 +17,7 @@ export const ScatterPlotUpdate = () => {
   }, []);
 
   useEffect(() => {
-    console.log(dataUrl);
+    d3.csv(dataUrl).then(updateRef.current)
   }, [dataUrl])
 
   const renderLayout = () => {
@@ -34,33 +34,59 @@ export const ScatterPlotUpdate = () => {
       .append("g")
       .attr("class", 'container')
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
-    d3.csv(
-      "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/iris.csv"
-    ).then(function (data) {
-      const x = d3.scaleLinear().domain([4, 8]).range([0, width]);
-      container
-        .append("g")
-        .attr("transform", `translate(0, ${height})`)
-        .call(d3.axisBottom(x));
 
-      const y = d3.scaleLinear().domain([0, 9]).range([height, 0]);
-      container.append("g").call(d3.axisLeft(y));
+    const x = d3.scaleLinear().range([0, width]);
+    const y = d3.scaleLinear().range([height, 0]);
+    const color = d3
+      .scaleOrdinal<string>()
+      .range(["#440154ff", "#21908dff", "#fde725ff", "red", "blue"]);
 
-      const color = d3
-        .scaleOrdinal<string>()
-        .domain(["setosa", "versicolor", "virginica"])
-        .range(["#440154ff", "#21908dff", "#fde725ff"]);
+    const xAxis = container.append('g').attr('class', 'xAxis').attr("transform", `translate(0, ${height})`);
+    const yAxis = container.append('g').attr('class', 'yAxis');
+    const dots = container.append('g').attr('class', 'dots');
 
-      container
-        .append("g")
-        .selectAll("dot")
+    const mapper = {
+      0: {
+        xKey: 'Sepal_Length',
+        yKey: 'Petal_Length',
+        colorKey: 'Species'
+      },
+      1: {
+        xKey: 'gdpPercap',
+        yKey: 'lifeExp',
+        colorKey: 'country'
+      }
+    }
+    updateRef.current = function (data) {
+      console.log(data, mapper[+index]);
+      const { xKey, yKey, colorKey } = mapper[+index];
+      const xMap = data.map(v => +v[xKey]);
+      const xMin = Math.min(...xMap);
+      const xMax = Math.max(...xMap);
+
+      const yMap = data.map(v => +v[yKey]);
+      const yMin = Math.min(...yMap);
+      const yMax = Math.max(...yMap);
+
+      const colorMap = data.map(v => v[colorKey]);
+
+      x.domain([0, xMax]);
+      y.domain([0, yMax]);
+      color.domain(colorMap)
+
+      xAxis.call(d3.axisBottom(x));
+      yAxis.call(d3.axisLeft(y));
+
+      dots.selectAll("circle")
         .data(data)
         .join("circle")
-        .attr("cx", (d) => x(+d.Sepal_Length))
-        .attr("cy", (d) => y(+d.Petal_Length))
+        .transition()
+        .duration(500)
+        .attr("cx", (d) => x(+d[xKey]))
+        .attr("cy", (d) => y(+d[yKey]))
         .attr("r", 5)
-        .style("fill", (d) => color(d.Species));
-    });
+        .style("fill", (d) => color(d[colorKey]));
+    };
   };
 
   return (
