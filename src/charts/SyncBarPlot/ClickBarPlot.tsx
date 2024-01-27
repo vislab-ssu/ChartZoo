@@ -1,24 +1,11 @@
 import * as d3 from "d3"; // 자동완성으로 추가하면 import d3 from "d3"; 가 추가되는데, 항상 * as 를 붙여야 함
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { SyncBarPlotProps } from ".";
 
-const urlList = [
-  "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv",
-  "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/barplot_change_data.csv"
-]
-let index = false;
-type SelectableBarPlotProps = {
-  setSelectedList: React.Dispatch<React.SetStateAction<string[]>>
-}
-
-export const BrushBarPlot = ({ setSelectedList }: SelectableBarPlotProps) => {
-  const [dataUrl, setDataUrl] = useState(urlList[+index]);
+export const ClickBarPlot = ({ dataUrl, selectedList, setSelectedList }: SyncBarPlotProps) => {
   const svgRef = useRef();
   const containerRef = useRef<d3.Selection<SVGGElement, unknown, HTMLElement, any>>();
   const updateRef = useRef<(data: any[]) => void>();
-  const handleChangeButton = () => {
-    setDataUrl(urlList[+(index = !index)])
-    setSelectedList([]); // dataset 바뀌면 선택 목록 초기화
-  }
 
   useEffect(() => {
     renderLayout();
@@ -65,39 +52,6 @@ export const BrushBarPlot = ({ setSelectedList }: SelectableBarPlotProps) => {
       .append('g')
       .attr('class', 'bars');
 
-    const brush = d3.brushX()
-      .extent([[0, 0], [width, height]]) // [[x0, y0], [x1, y1]] (좌상단, 우하단), brushing 가능 영역
-      .on("brush", brushing)
-      .on("end", brushEnd);
-
-    const brushElement = container.call(brush);
-
-    function brushing(e: d3.D3BrushEvent<any>) {
-      if (!e.sourceEvent) return;
-      if (!e.selection) return;
-      const [x0, x1] = e.selection as [number, number];
-      const selectedList = x.domain().map(v => x(v)).filter(d => {
-        const pos = d + (x.bandwidth() / 2);
-        return pos >= x0 && pos <= x1;
-      });
-      const [left, right] = d3.extent(selectedList);
-      brushElement.call(brush.move, [left, right + margin.right]);
-    }
-
-    function brushEnd(e: d3.D3BrushEvent<any>) {
-      if (!e.sourceEvent) return;
-      if (!e.selection) {
-        setSelectedList([]);
-        return;
-      }
-      const [x0, x1] = e.selection as [number, number];
-      const selectionList = x.domain().filter((v) => {
-        const range = x(v);
-        return range >= x0 && range <= x1;
-      })
-      setSelectedList(selectionList);
-      // brushElement.call(brush.clear); // brush 끝내면 영역 상자 제거
-    }
     updateRef.current = function (data) {
       const [xKey, yKey] = Object.keys(data[0]);
       console.log({ xKey, yKey })
@@ -116,6 +70,20 @@ export const BrushBarPlot = ({ setSelectedList }: SelectableBarPlotProps) => {
         .join("rect")
         .attr('stroke', 'black')
         .attr('stroke-width', '1')
+        .on('click', function (e: MouseEvent, d: any/** data에 타입을 설정하면 그것으로 지정됨 */) {
+          setSelectedList((prevSelectionList) => {
+            let next;
+            const has = prevSelectionList.includes(d[xKey]);
+            if (has) {
+              next = prevSelectionList.filter(v => v != d[xKey]);
+            } else {
+              next = [...prevSelectionList];
+              next.push(d[xKey]);
+            }
+            d3.select(this).attr('stroke', has ? 'black' : 'red'); // .on(event, ...)에서 화살표함수 말고 function을 쓰면 this는 rect element가 됨
+            return next;
+          });
+        })
         .transition()
         .duration(500)
         .attr("x", d => x(d[xKey]))
@@ -127,10 +95,7 @@ export const BrushBarPlot = ({ setSelectedList }: SelectableBarPlotProps) => {
   }
   return (
     <>
-      <p>[brush]selectable bar plot</p>
-      <div>
-        <button onClick={handleChangeButton}>dataset change</button>
-      </div>
+      <p>[click]selectable bar plot</p>
       <svg ref={svgRef}></svg>
     </>
   )

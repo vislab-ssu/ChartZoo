@@ -27,7 +27,6 @@ export const ScatterPlotUpdate = () => {
       width = svgWidth - margin.left - margin.right,
       height = svgHeight - margin.top - margin.bottom;
 
-    // d3.select(svgRef.current).select('g').remove(); // react에 의해 중복 생성된 내부 element 제거
     const container = d3.select(svgRef.current)
       .attr("width", svgWidth)
       .attr("height", svgHeight)
@@ -41,7 +40,9 @@ export const ScatterPlotUpdate = () => {
       .scaleOrdinal<string>()
       .range(["#440154ff", "#21908dff", "#fde725ff", "red", "blue"]);
 
-    const xAxis = container.append('g').attr('class', 'xAxis').attr("transform", `translate(0, ${height})`);
+    const xAxis = container.append('g')
+      .attr('class', 'xAxis')
+      .attr("transform", `translate(0, ${height})`);
     const yAxis = container.append('g').attr('class', 'yAxis');
     const dots = container.append('g').attr('class', 'dots');
 
@@ -57,22 +58,27 @@ export const ScatterPlotUpdate = () => {
         colorKey: 'continent'
       }
     }
+
     updateRef.current = function (data) {
       console.log(data, mapper[+index]);
       const { xKey, yKey, colorKey } = mapper[+index];
-      const xMap = data.map(v => +v[xKey]);
+      const { xMap, yMap, colorMap } = data.reduce((acc, val) => {
+        acc.xMap.push(val[xKey]);
+        acc.yMap.push(val[yKey]);
+        acc.colorMap.add(val[colorKey]);
+        return acc;
+      }, { xMap: [], yMap: [], colorMap: new Set() });
+
       const xMin = Math.min(...xMap);
       const xMax = Math.max(...xMap);
 
-      const yMap = data.map(v => +v[yKey]);
       const yMin = Math.min(...yMap);
       const yMax = Math.max(...yMap);
 
-      const colorMap = new Set(data.map(v => v[colorKey]));
       console.log({ colorMap })
 
-      x.domain([0, xMax]);
-      y.domain([0, yMax]);
+      x.domain([xMin, xMax]);
+      y.domain([yMin, yMax]);
       color.domain(colorMap)
       xAxis.call(d3.axisBottom(x));
       yAxis.call(d3.axisLeft(y));
