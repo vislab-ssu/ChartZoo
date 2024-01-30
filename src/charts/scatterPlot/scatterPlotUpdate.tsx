@@ -18,7 +18,6 @@ export const ScatterPlotUpdate = () => {
 
   useEffect(() => {
     console.log(dataUrl);
-    d3.csv(dataUrl).then(updateRef.current)
   }, [dataUrl])
 
   const renderLayout = () => {
@@ -28,64 +27,39 @@ export const ScatterPlotUpdate = () => {
       width = svgWidth - margin.left - margin.right,
       height = svgHeight - margin.top - margin.bottom;
 
-    // d3.select(svgRef.current).select('g').remove(); // react에 의해 중복 생성된 내부 element 제거
     const container = d3.select(svgRef.current)
       .attr("width", svgWidth)
       .attr("height", svgHeight)
       .append("g")
       .attr("class", 'container')
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    d3.csv(
+      "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/iris.csv"
+    ).then(function (data) {
+      const x = d3.scaleLinear().domain([4, 8]).range([0, width]);
+      container
+        .append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(d3.axisBottom(x));
 
-    const x = d3.scaleLinear()
-      .range([0, width])
-      // .padding(0.2);
-
-    const y = d3.scaleLinear()
-      .range([height, 0]);
-
-    const xAxis = container
-      .append("g")
-      .attr('class', 'xAxis')
-      .attr("transform", `translate(0, ${height})`);
-
-    const yAxis = container
-      .append("g")
-      .attr('class', 'yAxis');
-
-    const scatters = container
-      .append('g')
-      .attr('class', 'scatters');
-
-    updateRef.current = function (data) {
-      const keys = Object.keys(data[0]);
-      console.log({ keys });
-      let [xKey, , yKey, , colorKey] = keys;
-      if (index) [ , colorKey, yKey, , xKey] = keys;
-      console.log({xKey, yKey})
-
-      x.domain([0, Math.max(...data.map(d => d[xKey]))]);
-      y.domain([0, Math.max(...data.map(v => +v[yKey]))]);
-
-      xAxis.call(d3.axisBottom(x))
-        .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
-      yAxis.call(d3.axisLeft(y));
+      const y = d3.scaleLinear().domain([0, 9]).range([height, 0]);
+      container.append("g").call(d3.axisLeft(y));
 
       const color = d3
         .scaleOrdinal<string>()
-        .domain([...new Set(data.map(c => c[colorKey]))])
+        .domain(["setosa", "versicolor", "virginica"])
         .range(["#440154ff", "#21908dff", "#fde725ff"]);
-      console.log(color.domain())
-      scatters
-        .selectAll("circle")
+
+      container
+        .append("g")
+        .selectAll("dot")
         .data(data)
         .join("circle")
-        .attr("cx", (d) => x(d[xKey]))
-        .attr("cy", (d) => y(+d[yKey]))
+        .attr("cx", (d) => x(+d.Sepal_Length))
+        .attr("cy", (d) => y(+d.Petal_Length))
         .attr("r", 5)
-        .style("fill", (d) => color(d[colorKey]));
-    }
+        .style("fill", (d) => color(d.Species));
+    });
   };
 
   return (

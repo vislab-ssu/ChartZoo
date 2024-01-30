@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { Workspace } from "./charts/SelectableBarPlot";
+import { SyncBarWorkspace } from "./charts/SyncBarPlot";
 import { BarPlotUpdate } from "./charts/barPlot/BarPlotUpdate";
 import BrushTest from "./charts/brushTest/BrushTest";
 import BubblePlot from "./charts/bubblePlot/BubblePlot";
@@ -20,7 +21,9 @@ export const routes: [string, string, JSX.Element][] = [
   ['brush 테스트', 'brush', <BrushTest></BrushTest>],
   ['barPlot', 'bar', <BarPlotUpdate></BarPlotUpdate>],
   ['scatterPlot', 'scatter', <ScatterPlotUpdate></ScatterPlotUpdate>],
-  ['selectableBarPlot', 'selectableBar', <Workspace></Workspace>]
+  ['selectableBarPlot', 'selectableBar', <Workspace></Workspace>],
+  ['syncBarPlot', 'syncBar', <SyncBarWorkspace></SyncBarWorkspace>],
+
 ]
 
 function App() {

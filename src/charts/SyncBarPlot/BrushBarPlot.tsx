@@ -1,24 +1,11 @@
 import * as d3 from "d3"; // 자동완성으로 추가하면 import d3 from "d3"; 가 추가되는데, 항상 * as 를 붙여야 함
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { SyncBarPlotProps } from ".";
 
-const urlList = [
-  "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv",
-  "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/barplot_change_data.csv"
-]
-let index = false;
-type SelectableBarPlotProps = {
-  setSelectedList: React.Dispatch<React.SetStateAction<string[]>>
-}
-
-export const BrushBarPlot = ({ setSelectedList }: SelectableBarPlotProps) => {
-  const [dataUrl, setDataUrl] = useState(urlList[+index]);
+export const BrushBarPlot = ({ dataUrl, selectedList, setSelectedList }: SyncBarPlotProps) => {
   const svgRef = useRef();
   const containerRef = useRef<d3.Selection<SVGGElement, unknown, HTMLElement, any>>();
   const updateRef = useRef<(data: any[]) => void>();
-  const handleChangeButton = () => {
-    setDataUrl(urlList[+(index = !index)])
-    setSelectedList([]); // dataset 바뀌면 선택 목록 초기화
-  }
 
   useEffect(() => {
     renderLayout();
@@ -128,9 +115,6 @@ export const BrushBarPlot = ({ setSelectedList }: SelectableBarPlotProps) => {
   return (
     <>
       <p>[brush]selectable bar plot</p>
-      <div>
-        <button onClick={handleChangeButton}>dataset change</button>
-      </div>
       <svg ref={svgRef}></svg>
     </>
   )

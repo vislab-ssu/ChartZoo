@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState } from "react"
-import { SelectableBarPlot } from "./ClickBarPlot"
+import { useCallback, useState } from "react";
 import { BrushBarPlot } from "./BrushBarPlot";
+import { SelectableBarPlot } from "./ClickBarPlot";
 
 export const Workspace = () => {
     const [selectedList, setSelectedList] = useState<string[]>([]);
@@ -10,7 +10,7 @@ export const Workspace = () => {
     const BarPlot = useCallback(() => {
         if (mode == 'click') return <SelectableBarPlot setSelectedList={setSelectedList}></SelectableBarPlot>;
         else if (mode == 'brush') return <BrushBarPlot setSelectedList={setSelectedList}></BrushBarPlot>;
-    }, [mode]); 
+    }, [mode]);
     return (
         <>
             <div>
