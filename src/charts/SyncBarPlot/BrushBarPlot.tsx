@@ -6,7 +6,7 @@ export const BrushBarPlot = ({ dataUrl, selectedList, setSelectedList }: SyncBar
   const svgRef = useRef();
   const containerRef = useRef<d3.Selection<SVGGElement, unknown, HTMLElement, any>>();
   const updateRef = useRef<(data: any[]) => void>();
-
+  const xKeyRef = useRef<string>();
   useEffect(() => {
     renderLayout();
   }, []);
@@ -15,6 +15,15 @@ export const BrushBarPlot = ({ dataUrl, selectedList, setSelectedList }: SyncBar
     d3.csv(dataUrl).then(updateRef.current)
   }, [dataUrl])
 
+  useEffect(() => {
+    d3.select("g.bars")
+      .selectAll("rect")
+      .attr('stroke', d => selectedList.includes(d[xKeyRef.current]) ? 'red' :'black')
+    containerRef.current.select("g.bars")
+      .selectAll("rect")
+      .attr('stroke', d => selectedList.includes(d[xKeyRef.current]) ? 'red' :'black')
+  }, [selectedList])
+   console.log(d3.select("g.bars"));
   const renderLayout = () => {
     // set the dimensions and margins of the graph
     const margin = { top: 30, right: 30, bottom: 70, left: 60 },
@@ -87,6 +96,7 @@ export const BrushBarPlot = ({ dataUrl, selectedList, setSelectedList }: SyncBar
     }
     updateRef.current = function (data) {
       const [xKey, yKey] = Object.keys(data[0]);
+      xKeyRef.current = xKey;
       console.log({ xKey, yKey })
       // X axis
       x.domain(data.map(d => d[xKey]));
@@ -107,7 +117,7 @@ export const BrushBarPlot = ({ dataUrl, selectedList, setSelectedList }: SyncBar
         .duration(500)
         .attr("x", d => x(d[xKey]))
         .attr("y", d => y(+d[yKey]))
-        .attr("width", x.bandwidth())
+        .attr("width", x.bandwidth()) 
         .attr("height", d => height - y(+d[yKey]))
         .attr("fill", "#69b3a2")
     }
