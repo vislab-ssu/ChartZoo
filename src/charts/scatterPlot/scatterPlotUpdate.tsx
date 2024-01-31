@@ -39,8 +39,8 @@ export const ScatterPlotUpdate = () => {
       .select(svgRef.current)
       .attr("width", svgWidth)
       .attr("height", svgHeight)
-      .attr("class", "container")
       .append("g")
+      .attr("class", "container")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     /////////////////////////////
@@ -52,6 +52,10 @@ export const ScatterPlotUpdate = () => {
     const x = d3.scaleLinear().range([0, width]);
 
     const y = d3.scaleLinear().range([height, 0]);
+
+    const color = d3
+      .scaleOrdinal<string>()
+      .range(["#440154ff", "#21908dff", "#fde725ff", "red", "blue"]);
 
     // 축 및 scatter 그룹(변하지 않는 정적인 부분)
     // 축을 생성하는 .call(d3.axisXXX)함수만 빼고 설정
@@ -90,8 +94,8 @@ export const ScatterPlotUpdate = () => {
       // scale 함수 domain 설정 //
       ////////////////////////////
       x.domain([
-        Math.min(...data.map((d) => +d[xKey])),
-        Math.max(...data.map((d) => +d[xKey])),
+        Math.floor(Math.min(...data.map((d) => +d[xKey]))),
+        Math.ceil(Math.max(...data.map((d) => +d[xKey]))),
       ]);
       y.domain([0, Math.max(...data.map((v) => +v[yKey]))]);
 
@@ -104,10 +108,10 @@ export const ScatterPlotUpdate = () => {
       // .style("text-anchor", "end");
       yAxis.call(d3.axisLeft(y));
 
-      // const scatterColor = d3
-      //   .scaleOrdinal<string>()
-      //   .domain(["setosa", "versicolor", "virginica"])
-      //   .range(["#440154ff", "#21908dff", "#fde725ff"]);
+      const scatterColor = d3
+        .scaleOrdinal<string>()
+        .domain(["setosa", "versicolor", "virginica"])
+        .range(["#440154ff", "#21908dff", "#fde725ff"]);
 
       //////////////////
       // scatter 생성 //
@@ -124,10 +128,12 @@ export const ScatterPlotUpdate = () => {
         .attr("cy", function (d) {
           return y(+d[yKey]);
         })
-        .attr("r", 5);
-      // .style("fill", function (d) {
-      //   return scatterColor(d[color]);
-      // });
+        .attr("r", 5)
+        .style("fill", function (d) {
+          console.log(scatterColor(d[color]));
+          console.log(d[color]);
+          return scatterColor(d[color]);
+        });
     };
   };
 
