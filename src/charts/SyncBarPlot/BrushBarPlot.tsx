@@ -6,6 +6,7 @@ export const BrushBarPlot = ({ dataUrl, selectedList, setSelectedList }: SyncBar
   const svgRef = useRef();
   const containerRef = useRef<d3.Selection<SVGGElement, unknown, HTMLElement, any>>();
   const updateRef = useRef<(data: any[]) => void>();
+  const xKeyRef = useRef<string>();
 
   useEffect(() => {
     renderLayout();
@@ -14,6 +15,11 @@ export const BrushBarPlot = ({ dataUrl, selectedList, setSelectedList }: SyncBar
   useEffect(() => {
     d3.csv(dataUrl).then(updateRef.current)
   }, [dataUrl])
+
+  useEffect(() => {
+    containerRef.current.select('.bars').selectAll('rect')
+      .attr('stroke', d => selectedList.includes(d[xKeyRef.current]) ? 'red' : 'black')
+  }, [selectedList])
 
   const renderLayout = () => {
     // set the dimensions and margins of the graph
@@ -87,6 +93,7 @@ export const BrushBarPlot = ({ dataUrl, selectedList, setSelectedList }: SyncBar
     }
     updateRef.current = function (data) {
       const [xKey, yKey] = Object.keys(data[0]);
+      xKeyRef.current = xKey;
       console.log({ xKey, yKey })
       // X axis
       x.domain(data.map(d => d[xKey]));
@@ -102,7 +109,7 @@ export const BrushBarPlot = ({ dataUrl, selectedList, setSelectedList }: SyncBar
         .data(data)
         .join("rect")
         .attr('stroke', 'black')
-        .attr('stroke-width', '1')
+        .attr('stroke-width', '2')
         .transition()
         .duration(500)
         .attr("x", d => x(d[xKey]))
