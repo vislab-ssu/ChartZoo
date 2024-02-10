@@ -63,7 +63,7 @@ export const ScatterPlot = () => {
       .attr("width", svgWidth)
       .attr("height", svgHeight)
       .append("g") // 선택된 DOM 객체[코드상 svg]의 자식(인자로 넣은 요소[코드상 g])를 추가하는 함수
-      .attr("transform", `translate(${margin.left}, ${margin.top})`); // transform 속성의 값, margin left&top만큼 이동시킴
+      .attr("transform", `translate(${margin.left}, ${margin.top})`); // transform 속성의 값으로 translate(x,y) 사용
     // 메서드 체이닝에서 최종 return 값은 마지막 사용한 select/append (const svg는 g element가 할당)
 
     ///////////////////
@@ -81,12 +81,20 @@ export const ScatterPlot = () => {
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(x)); // axisBottom : 수평선-tick이 아래를 향함
 
-      const y = d3.scaleLinear().domain([0, 9]).range([height, 0]);
+      const y = d3.scaleLinear().domain([0, 9]).range([height, 0]); // y의 range는 반대
       svg.append("g").call(d3.axisLeft(y)); // axisLeft : 수직선-tick이 왼쪽을 향함
+
+      // .call(d3.axisXyzw(domain과 range가 설정된 scale함수)) 형태로 사용
+
+      // x축은 수평선 & tick이 아래를 향해야 하므로 axisBottom 사용
+      // 컨테이너 때 사용한 transform, translate로 height만큼 내려 줌
+      // y축은 수직선 & tick이 왼쪽을 향해야 하므로 axisLeft 사용
+      // 0, 0에서 생성한 채로 둬도 되므로 transform, translate 사용 안함
 
       //////////////////////////////////////////////////////////
       // Color scale: give me a specie name, I return a color //
       //////////////////////////////////////////////////////////
+      // scaleOrdinal 사용시 타입 주의하기 !!
       const color = d3
         .scaleOrdinal<string>() // color 함수 사용 시에는 타입 에러 방지를 위해 제네릭
         .domain(["setosa", "versicolor", "virginica"])
@@ -102,8 +110,18 @@ export const ScatterPlot = () => {
       svg
         .append("g") // svg(container)에 그룹(g)을 추가
         .selectAll("dot") // "dot"이라는 selector를 전부 선택
-        .data(data) // 데이터 등록 (두번째 인자 key 전달, 없으면 index 기준 업데이트)
+        .data(data)
+        // 데이터 등록 (두번째 인자로 key 전달, 없으면 index 기준 업데이트)
+        // Iterable(배열 등) 타입의 변수를 인자로 받음
         .join("circle") // 등록한 배열의 length만큼 circle 요소 생성
+        /* 
+          selectAll("dot")은 "dot"이라는 selector를 전부 선택함
+          dot은 존재하지 않으므로 빈 배열이 반환됨
+          circle을 인자로 넣었다면 처음에는, 업데이트가 아닌 삽입으로 빈 배열이 반환되지만
+          두번째 호출부터는 변수 svg의 자식으로 있는 circle들을 전부 반환함
+        */
+
+        // 속성 설정
         .attr("cx", function (d) {
           // .attr() : 속성 설정
           return x(+d.Sepal_Length);
@@ -112,6 +130,8 @@ export const ScatterPlot = () => {
           return y(+d.Petal_Length);
         })
         .attr("r", 5)
+
+        // css 설정
         .style("fill", function (d) {
           // .style() : css 설정
           return color(d.Species);
