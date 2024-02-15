@@ -8,7 +8,7 @@ export const BarPlot = () => {
   useEffect(() => {
     render();
   }, []);
-
+  console.log("rerender");
   const render = () => {
     // set the dimensions and margins of the graph
     const margin = { top: 30, right: 30, bottom: 70, left: 60 },

@@ -3,6 +3,9 @@ import { Toolbar, IconButton, Typography, Theme } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { DataContext } from "../Context";
+import { Test } from "../Test";
 
 const drawerWidth: number = 240;
 
@@ -26,6 +29,8 @@ const Bar = styled(MuiAppBar, {
 
 export default function AppBar({ open, toggleDrawer }) {
   const navigate = useNavigate();
+  const { data, setData } = useContext(DataContext);
+  console.log({ data });
   const onClick = () => {
     navigate("/");
   };
@@ -59,6 +64,7 @@ export default function AppBar({ open, toggleDrawer }) {
           >
             ChartZoo
           </Typography>
+          <Test />
         </Toolbar>
       </Bar>
     </>
