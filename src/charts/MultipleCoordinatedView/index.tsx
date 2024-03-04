@@ -1,6 +1,7 @@
-import { USAMap } from "./USAMap"
-import { BarPlot } from "./barPlot"
+import { USAMap } from "./USAMap";
+import { BarPlot } from "./barPlot";
 
+// MultipleCoordinatedView 메인 화면 컴포넌트
 export const MCV = () => {
   return (
     <>
@@ -9,6 +10,5 @@ export const MCV = () => {
         <BarPlot xKey={"Wildlife Size"}></BarPlot>
       </div>
     </>
-  )
-}
-
+  );
+};
