@@ -1,15 +1,26 @@
-import { createContext, useState } from "react";
+import { createContext, useReducer, useState } from "react";
 import birdStrikes from "./assets/birdstrikes.json";
+import * as d3 from "d3";
 
-export type BirdStike = typeof birdStrikes;
+export type BirdStikes = typeof birdStrikes;
 export type BirdStrikeKeys = keyof (typeof birdStrikes)[0];
 type FilterList = Partial<{
   [key in BirdStrikeKeys]: Set<string | number>;
 }>;
+type Action = {
+  type: "setFilter" | "reset",
+  key?: BirdStrikeKeys,
+  data?: string,
+  attr?: {
+    selection: d3.Selection<any,any,any,any>;
+    attribute: string;
+    value?: null | string | number | d3.ValueFn<d3.BaseType, (typeof birdStrikes)[0], any>
+  };
+};
 type DataContextType = {
   source: typeof birdStrikes;
   filteredSource: typeof birdStrikes;
-  setFilterList: React.Dispatch<React.SetStateAction<FilterList>>;
+  dispatch: React.Dispatch<Action>
 };
 
 /* 
@@ -34,14 +45,13 @@ export const DataContext = createContext<DataContextType>(null);
 - 전역상태로 사용할 값은 자유롭게 지정
 */
 export function GlobalContext({ children }) {
-  const [filterList, setFilterList] = useState<FilterList>({
+  const [filterList, dispatch] = useReducer(reducer, {
     "Origin State": new Set(),
     "Wildlife Size": new Set(),
-  });
+  } as FilterList);
 
-  // 1) filterList에 들어있는 필터 값 리스트 획득
+  console.log({filterList});
   const filterKeys = Object.keys(filterList) as BirdStrikeKeys[];
-  // 2) 두 필터 값이 모두 적용되는 .filter 함수 완성하기
   const filteredSource = birdStrikes.filter((birdStrike) => {
     return filterKeys.every((filterKey) => {
       const filterValues = filterList[filterKey];
@@ -55,9 +65,32 @@ export function GlobalContext({ children }) {
   console.log({ birdStrikes, filteredSource });
   return (
     <DataContext.Provider
-      value={{ source: birdStrikes, filteredSource, setFilterList }}
+      value={{ source: birdStrikes, filteredSource, dispatch }}
     >
       {children}
     </DataContext.Provider>
   );
+}
+
+function reducer(state: FilterList, {type, data, key, attr}: Action) {
+  switch(type) {
+    case "setFilter": {
+      const has = state[key].has(data);
+      if (has) {
+        state[key].delete(data);
+      } else {
+        state[key].add(data);
+      }
+      if (attr) {
+        const {selection, attribute} = attr;
+        selection.attr(attribute, has ? 'black' : 'red');
+      }
+      return {...state}
+    }
+    case "reset": {
+      const filterKeys = Object.keys(state) as BirdStrikeKeys[];
+      filterKeys.forEach((key) => state[key].clear());
+      return {...state}
+    }
+  }
 }

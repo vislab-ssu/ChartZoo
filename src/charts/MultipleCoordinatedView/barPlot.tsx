@@ -1,9 +1,9 @@
 import * as d3 from "d3";
 import { useContext, useEffect, useRef } from "react";
-import { BirdStike, BirdStrikeKeys, DataContext } from "../../Context";
+import { BirdStikes, BirdStrikeKeys, DataContext } from "../../Context";
 
 export const BarPlot = ({ xKey }: { xKey: BirdStrikeKeys }) => {
-  const { source, filteredSource, setFilterList } = useContext(DataContext);
+  const { source, filteredSource, dispatch } = useContext(DataContext);
   const containerRef = useRef<SVGGElement>();
   const updateRef = useRef<(data: any[]) => void>();
 
@@ -75,18 +75,17 @@ export const BarPlot = ({ xKey }: { xKey: BirdStrikeKeys }) => {
       .selectAll("rect")
       .data(numberOfXKey)
       .join("rect")
-      .on("click", function (e, d) {
+      .on("click", function(e, d) {
         // 테두리 굵기 highlighting 및 setFilterList 로직 작성
         console.log(d);
-        setFilterList((prevFilterList) => {
-          const has = prevFilterList["Wildlife Size"].has(d["Wildlife Size"]);
-          if (has) {
-            prevFilterList["Wildlife Size"].delete(d["Wildlife Size"]);
-          } else {
-            prevFilterList["Wildlife Size"].add(d["Wildlife Size"]);
+        dispatch({
+          type: "setFilter",
+          key: "Wildlife Size",
+          data: d["Wildlife Size"],
+          attr: {
+            selection: d3.select(this),
+            attribute: 'stroke'
           }
-          d3.select(this).attr("stroke", has ? "black" : "red");
-          return { ...prevFilterList };
         });
       })
       .attr("x", (d) => x(d[xKey]))
@@ -99,7 +98,7 @@ export const BarPlot = ({ xKey }: { xKey: BirdStrikeKeys }) => {
       .attr("fill", "#69b3a2")
       .attr("cursor", "pointer");
 
-    updateRef.current = function (filteredSource: BirdStike[]) {
+    updateRef.current = function (filteredSource: BirdStikes[]) {
       const numberOfFilteredData = filteredSource.reduce(getNumberOfXKey, []);
       const data = numberOfFilteredData.length ? numberOfFilteredData : [];
 
@@ -108,19 +107,18 @@ export const BarPlot = ({ xKey }: { xKey: BirdStrikeKeys }) => {
         .selectAll("rect")
         .data(data)
         .join("rect")
-        .on("click", function (e, d) {
+        .on("click", function(e, d) {
           // 테두리 굵기 highlighting 및 setFilterList 로직 작성
           // bars에서 만들 것과 동일함
           // 전체, 개수 막대 모두 클릭이 가능하도록 해야 함
-          setFilterList((prevFilterList) => {
-            const has = prevFilterList["Wildlife Size"].has(d["Wildlife Size"]);
-            if (has) {
-              prevFilterList["Wildlife Size"].delete(d["Wildlife Size"]);
-            } else {
-              prevFilterList["Wildlife Size"].add(d["Wildlife Size"]);
+          dispatch({
+            type: "setFilter",
+            key: "Wildlife Size",
+            data: d["Wildlife Size"],
+            attr: {
+              selection: d3.select(this),
+              attribute: 'stroke'
             }
-            d3.select(this).attr("stroke", has ? "black" : "red");
-            return { ...prevFilterList };
           });
         })
         .attr("fill", "darkred")
