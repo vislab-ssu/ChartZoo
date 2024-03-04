@@ -75,7 +75,7 @@ export const BarPlot = ({ xKey }: { xKey: BirdStrikeKeys }) => {
       .selectAll("rect")
       .data(numberOfXKey)
       .join("rect")
-      .on("click", (e, d) => {
+      .on("click", function (e, d) {
         // 테두리 굵기 highlighting 및 setFilterList 로직 작성
         console.log(d);
         setFilterList((prevFilterList) => {
@@ -108,7 +108,7 @@ export const BarPlot = ({ xKey }: { xKey: BirdStrikeKeys }) => {
         .selectAll("rect")
         .data(data)
         .join("rect")
-        .on("click", (e, d) => {
+        .on("click", function (e, d) {
           // 테두리 굵기 highlighting 및 setFilterList 로직 작성
           // bars에서 만들 것과 동일함
           // 전체, 개수 막대 모두 클릭이 가능하도록 해야 함

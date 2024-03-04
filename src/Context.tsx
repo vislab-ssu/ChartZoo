@@ -41,16 +41,9 @@ export function GlobalContext({ children }) {
 
   // 1) filterList에 들어있는 필터 값 리스트 획득
   const filterKeys = Object.keys(filterList) as BirdStrikeKeys[];
-  // console.log("filterList :", filterList);
-  // console.log("filterKeys :", filterKeys); // ['Origin State', 'Wildlife Size']
-
-  // 두 필터 값이 모두 적용되는 .filter 함수 완성하기
-  // 2) filteredSource
+  // 2) 두 필터 값이 모두 적용되는 .filter 함수 완성하기
   const filteredSource = birdStrikes.filter((birdStrike) => {
-    // console.log(birdStrike);
     return filterKeys.every((filterKey) => {
-      // 배열의 array 함수와 sum 함수
-      // console.log(filterKey);
       const filterValues = filterList[filterKey];
       if (filterValues.size === 0) {
         return true;

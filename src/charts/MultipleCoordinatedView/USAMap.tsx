@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { useContext, useEffect, useMemo, useRef } from "react";
 import * as topojson from "topojson-client";
-import { BirdStike, DataContext } from "../../Context";
+import { BirdStike as BirdStikes, DataContext } from "../../Context";
 import USATopo from "../../assets/USA.json";
 
 // 목표 : 주(state)를 클릭하면 테두리를 highlight 하고 setFilterList를 통해
@@ -54,14 +54,25 @@ export const USAMap = () => {
         });
       })
       .append("title")
-      .text((d) => d.properties.name);
+      .text((d) => `${d.properties.name}\n`);
   };
 
-  const update = (filteredSource: BirdStike) => {
+  const update = (filteredSource: BirdStikes) => {
     // reduce로 값 개수 추출
+    const numberOfStates = filteredSource.reduce((acc, val) => {
+      if (!acc[val["Origin State"]]) acc[val["Origin State"]] = 0; 
+      acc[val["Origin State"]]++;
+      return acc;
+    }, {});
+    // title에 추가정보(개수) 표시
+    d3.select(containerRef.current)
+      .selectAll("path")
+      .selectAll("title")
+      .text((d: any) => `${d.properties.name}\n ${numberOfStates[d.properties.name]}`)
+    console.log({numberOfStates});
     // opacity(scaleLinear)의 domain 값 설정
-    const numberOfStates = filteredSource;
-
+    const extent = d3.extent(Object.keys(numberOfStates).map(state => numberOfStates[state]));
+    opacity.domain(extent);
     // 지도 색상 업데이트, 이 코드는 건드리지 않아도 됨
     d3.select(containerRef.current)
       .selectAll("path")
