@@ -6,6 +6,7 @@ import { SyncBarWorkspace } from "./charts/SyncBarPlot";
 import { BarPlotUpdate } from "./charts/barPlot/BarPlotUpdate";
 import BrushTest from "./charts/brushTest/BrushTest";
 import BubblePlot from "./charts/bubblePlot/BubblePlot";
+import ForceDirectedDiagram from "./charts/forceDirectedDiagram/ForceDirectedDiagram";
 import { ScatterPlotUpdate } from "./charts/scatterPlot/scatterPlotUpdate";
 import Dashboard from "./workspace/Dashboard";
 
@@ -23,6 +24,7 @@ export const routes: [string, string, JSX.Element][] = [
   ['selectableBarPlot', 'selectableBar', <Workspace></Workspace>],
   ['syncBarPlot', 'syncBar', <SyncBarWorkspace></SyncBarWorkspace>],
   ['multipleView', 'multi-view', <MCV></MCV>],
+  ['forceDirectedDiagram', 'force-directed-diagram', <ForceDirectedDiagram></ForceDirectedDiagram>]
 
 ]
 
